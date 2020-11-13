@@ -8,15 +8,19 @@
 #    Build      : None  
 #    Copyright  : Thomas Glaser 2020
 #
+#    Fritz!OS Version: 7.20 
+#    microSip Version:      
+#
 #   TODO        
 #   
 #   Changelog
 #
 import xml.etree.ElementTree as ET
 import csv
+import sys
 #
 # open a csv file for writing 
-csvData = open('importfile.csv', 'w')
+csvData = open('microSipImport.csv', 'w')
 # create the csv writer object
 csvwriter = csv.writer(csvData)
 #
@@ -26,7 +30,14 @@ csv_head = ['Name', 'Number', 'First Name', 'Last Name', 'Phone Number', 'Mobile
 csvwriter.writerow(csv_head)
 
 # open XML file for input and get the phonebook for scanning contacts   
-inputFile = './Telefonbuch3.xml'
+inputFile = './Telefonbuch.xml'
+if len(sys.argv) > 0:
+    if sys.argv[1] == "help":
+        print(" Help ")
+        sys.exit(0)
+    else:    
+        inputFile = sys.argv[1]
+#
 tree = ET.parse(inputFile)
 root = tree.getroot()
 phonebook = root.find('phonebook') 
@@ -41,13 +52,17 @@ for contact in phonebook.findall('contact'):
     # iter about the entries an save it to the csv file 
     for t in tel:
         for n in t.findall('number'):
+            # clear row / new list
+            csvRow = []
             number = n.text
-            csv = []
+            # get type of phone number 
             type = (n.attrib['type'])
-            pos_name = name + ' (' + type + ')'
-            csv.append(pos_name)
-            csv.append(number)
-            csvwriter.writerow(csv)
+            # add type to the name 
+            nameType = name + ' (' + type + ')'
+            # appent content to list and write a row 
+            csvRow.append(nameType)
+            csvRow.append(number)
+            csvwriter.writerow(csvRow)
     #
 
 csvData.close()
