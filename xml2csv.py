@@ -3,7 +3,7 @@
 # License MIT 
 #    Document   : xml2csv.py 
 #    Author     : Thomas Glaser
-#    Description: Converts a XML-file from Fritz!Box phonebook export to an importable csv file for microSIP 
+#    Description: Converts a XML-file from a Fritz!Box phonebook export to an importable csv file for microSIP 
 #    Version    : 0.10 
 #    Build      : None  
 #    Copyright  : Thomas Glaser 2020
@@ -31,7 +31,7 @@ csvwriter.writerow(csv_head)
 
 # open XML file for input and get the phonebook for scanning contacts   
 inputFile = './Telefonbuch.xml'
-if len(sys.argv) > 0:
+if len(sys.argv) - 1 > 0:
     if sys.argv[1] == "help":
         print(" Help ")
         sys.exit(0)
